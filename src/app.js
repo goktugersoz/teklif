@@ -349,6 +349,7 @@ function renderComparison(request, offers){
       </article>
     `;
   }).join("") : `<div class="summary-empty">Henüz firma teklifi yok.</div>`;
+  renderOfferDetails(request, offers);
 
   $("comparisonEmpty").style.display = offers.length ? "none" : "block";
   $("comparisonHead").innerHTML = "";
@@ -393,6 +394,76 @@ function renderComparison(request, offers){
   });
 }
 
+function renderOfferDetails(request, offers){
+  const wrap = $("offerDetails");
+  if(!wrap) return;
+  if(!offers.length){
+    wrap.innerHTML = `<div class="summary-empty">Henüz firma teklifi yok.</div>`;
+    return;
+  }
+
+  wrap.innerHTML = offers.map(offer => {
+    const prices = new Map((offer.items || []).map(item => [item.itemId, Number(item.unitPrice) || 0]));
+    const total = offerTotal(request, offer);
+    const estimate = estimateTotal(request.items);
+    const totalDiff = diffInfo(total, estimate);
+    const rows = request.items.map((item, index) => {
+      const quantity = parseNumber(item.quantity);
+      const estimated = parseNumber(item.estimatedUnitPrice);
+      const price = prices.get(item.id) || 0;
+      const lineTotal = Number.isFinite(quantity) ? quantity * price : 0;
+      const lineDiff = diffInfo(price, Number.isFinite(estimated) ? estimated : 0);
+      return `
+        <tr>
+          <td class="num">${index + 1}</td>
+          <td class="mono">${esc(item.posNo)}</td>
+          <td>${esc(item.description)}</td>
+          <td class="num">${esc(item.quantity)}</td>
+          <td>${esc(item.unit)}</td>
+          <td class="num">${Number.isFinite(estimated) ? fmtTL(estimated) : "—"}</td>
+          <td class="num">${fmtTL(price)}</td>
+          <td class="num">${fmtTL(lineTotal)}</td>
+          <td class="num ${lineDiff.cls}">${lineDiff.text}</td>
+        </tr>
+      `;
+    }).join("");
+
+    return `
+      <article class="firm-detail-card">
+        <div class="firm-detail-card__head">
+          <div>
+            <h4>${esc(offer.companyName)}</h4>
+            <p>${esc(offer.contactName || "Yetkili girilmedi")}${offer.contactPhone ? " · " + esc(offer.contactPhone) : ""} · ${fmtDate(offer.submittedAt)}</p>
+          </div>
+          <div class="firm-detail-card__total">
+            <span>Toplam</span>
+            <strong>${fmtTL(total)}</strong>
+            <em class="${totalDiff.cls}">${estimate ? totalDiff.text : "Yaklaşık maliyet yok"}</em>
+          </div>
+        </div>
+        <div class="table-shell firm-detail-table">
+          <table>
+            <thead>
+              <tr>
+                <th class="num">#</th>
+                <th>Poz No</th>
+                <th>Kalem</th>
+                <th class="num">Miktar</th>
+                <th>Birim</th>
+                <th class="num">Yaklaşık BF</th>
+                <th class="num">Firma BF</th>
+                <th class="num">Firma Tutar</th>
+                <th class="num">Fark</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
 function wireComparisonActions(){
   $("selectedVendorLinkBtn").addEventListener("click", () => copyText(vendorLink(state.selectedRequestId)));
   $("detailCopyCodeBtn").addEventListener("click", () => copyText(state.selectedRequestId));
@@ -419,6 +490,7 @@ function resetComparison(){
   $("detailOfferCount").textContent = "0";
   $("detailBestOffer").textContent = "Yok";
   $("offersCards").innerHTML = "";
+  if($("offerDetails")) $("offerDetails").innerHTML = "";
   $("comparisonHead").innerHTML = "";
   $("comparisonBody").innerHTML = "";
   $("comparisonEmpty").style.display = "block";
