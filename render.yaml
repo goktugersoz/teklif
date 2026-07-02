@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: teklif
+    runtime: docker
+    plan: free
+    region: frankfurt
+    envVars:
+      - key: DB_DRIVER
+        value: pgsql
+      - key: DB_SSLMODE
+        value: require
+      - key: AUTO_MIGRATE
+        value: "true"
+      - key: MIGRATION_TOKEN
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false

@@ -1,0 +1,7 @@
+Options -Indexes
+
+AddType application/manifest+json .json
+
+<FilesMatch "^(schema.*\.sql|README-HOSTING\.md|render\.yaml|Dockerfile|render-start\.sh)$">
+  Require all denied
+</FilesMatch>

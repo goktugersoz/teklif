@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101826">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Teklif">
+  <title>Firma Fiyat Girişi</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles/app.css">
+</head>
+<body class="vendor-page">
+  <main class="vendor-portal">
+    <section class="vendor-cover">
+      <div class="vendor-cover__brand">
+        <div class="brand__mark">T</div>
+        <div>
+          <div class="brand__title">Teklif</div>
+          <div class="brand__subtitle">Firma fiyat giriş portalı</div>
+        </div>
+      </div>
+      <button class="button button--ghost vendor-install" id="installAppBtn" type="button" hidden>
+        <i data-lucide="download"></i>
+        <span>Uygulamayı Yükle</span>
+      </button>
+      <div>
+        <p class="eyebrow">Güvenli Fiyat Girişi</p>
+        <h1>Size iletilen teklif kodu ile yalnızca kendi fiyatlarınızı girin.</h1>
+        <p class="vendor-cover__text">Yaklaşık maliyet ve diğer firmaların teklifleri bu ekranda gösterilmez.</p>
+      </div>
+      <div class="db-pill db-pill--light">
+        <span></span>
+        <div>
+          <strong id="dbStatus">Başlatılıyor</strong>
+          <small>SQL DB: teklif</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="vendor-panel">
+      <div class="panel vendor-login" id="vendorLoginPanel">
+        <div class="panel__head">
+          <div>
+            <h2>Teklif Dosyasını Aç</h2>
+            <p>Firma bilgilerinizi girin, ardından kalemlere birim fiyat yazın.</p>
+          </div>
+        </div>
+        <div class="panel__body">
+          <label class="field">
+            <span>Teklif kodu</span>
+            <input id="fetchCode" type="text" placeholder="Örn: 7K4M9P" style="text-transform:uppercase">
+          </label>
+          <label class="field">
+            <span>Firma ünvanı</span>
+            <input id="companyName" type="text" placeholder="Firma adı">
+          </label>
+          <div class="form-grid">
+            <label class="field">
+              <span>Yetkili</span>
+              <input id="contactName" type="text" placeholder="Ad soyad">
+            </label>
+            <label class="field">
+              <span>Telefon</span>
+              <input id="contactPhone" type="text" placeholder="Opsiyonel">
+            </label>
+          </div>
+          <div id="fetchBanner"></div>
+          <button class="button button--primary" id="fetchReqBtn" type="button">
+            <i data-lucide="folder-open"></i>
+            <span>Dosyayı Getir</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="panel vendor-work" id="vendorWorkArea">
+        <div class="panel__head">
+          <div>
+            <h2 id="vendorTitle">Teklif</h2>
+            <p id="vendorMeta">Kod girildikten sonra kalemler burada görünür.</p>
+          </div>
+          <div class="total-box">
+            <span>Toplam teklif</span>
+            <strong id="vendorTotal">0,00 TL</strong>
+          </div>
+        </div>
+        <div class="panel__body">
+          <div class="table-shell">
+            <table>
+              <thead>
+                <tr>
+                  <th class="num">#</th>
+                  <th>Poz No</th>
+                  <th>Kalem adı</th>
+                  <th class="num">Miktar</th>
+                  <th>Birim</th>
+                  <th class="num">Birim fiyat</th>
+                  <th class="num">Tutar</th>
+                </tr>
+              </thead>
+              <tbody id="vendorItemsBody"></tbody>
+            </table>
+          </div>
+          <div id="submitBanner"></div>
+          <div class="footer-actions">
+            <button class="button button--primary" id="submitOfferBtn" type="button">
+              <i data-lucide="send"></i>
+              <span>Fiyatları Gönder</span>
+            </button>
+            <button class="button button--ghost" id="resetVendorBtn" type="button">
+              <i data-lucide="rotate-ccw"></i>
+              <span>Yeni Kod</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script type="module" src="src/vendor.js"></script>
+</body>
+</html>

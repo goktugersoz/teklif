@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101826">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Teklif">
+  <title>Teklif Yönetimi</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand__mark">T</div>
+        <div>
+          <div class="brand__title">Teklif</div>
+          <div class="brand__subtitle">Satın alma yönetimi</div>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Ana menü">
+        <button class="nav__item is-active" data-view="dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Özet</span>
+        </button>
+        <button class="nav__item" data-view="builder">
+          <i data-lucide="file-plus-2"></i>
+          <span>Teklif Dosyası</span>
+        </button>
+        <button class="nav__item" data-view="comparison">
+          <i data-lucide="columns-3"></i>
+          <span>Karşılaştırma</span>
+        </button>
+      </nav>
+
+      <div class="sidebar__footer">
+        <div class="db-pill">
+          <span></span>
+          <div>
+            <strong id="dbStatus">Başlatılıyor</strong>
+            <small>SQL DB: teklif</small>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="viewEyebrow">Yönetici Paneli</p>
+          <h1 id="viewTitle">Teklif Operasyon Merkezi</h1>
+        </div>
+        <div class="topbar__actions">
+          <button class="button button--ghost" id="refreshBtn" type="button">
+            <i data-lucide="refresh-cw"></i>
+            <span>Yenile</span>
+          </button>
+          <button class="button button--ghost" id="installAppBtn" type="button" hidden>
+            <i data-lucide="download"></i>
+            <span>Yükle</span>
+          </button>
+          <button class="button button--primary" id="quickNewBtn" type="button">
+            <i data-lucide="plus"></i>
+            <span>Yeni Dosya</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="view is-active" id="view-dashboard">
+        <div class="stats-grid">
+          <article class="stat-card">
+            <span>Aktif teklif dosyası</span>
+            <strong id="statRequests">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>Toplam firma teklifi</span>
+            <strong id="statOffers">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>Yaklaşık maliyet toplamı</span>
+            <strong id="statEstimate">0,00 TL</strong>
+          </article>
+          <article class="stat-card stat-card--accent">
+            <span>En düşük teklif</span>
+            <strong id="statBest">Yok</strong>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <section class="panel">
+            <div class="panel__head">
+              <div>
+                <h2>Teklif Dosyaları</h2>
+                <p>Kayıtlı dosyaları seçerek firma fiyatlarını ve farkları inceleyin.</p>
+              </div>
+            </div>
+            <div class="panel__body">
+              <div class="request-list" id="dashboardRequests"></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel__head">
+              <div>
+                <h2>Seçili Dosya</h2>
+                <p id="selectedSummaryText">Henüz dosya seçilmedi.</p>
+              </div>
+              <button class="button button--ghost button--sm" id="selectedVendorLinkBtn" type="button" disabled>
+                <i data-lucide="link"></i>
+                <span>Firma Linki</span>
+              </button>
+            </div>
+            <div class="panel__body">
+              <div class="selected-summary" id="selectedSummary"></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="view-builder">
+        <section class="panel">
+          <div class="panel__head">
+            <div>
+              <h2>Teklif Dosyası Hazırla</h2>
+              <p>PDF kalemlerini tek formata çevirin, yaklaşık maliyeti kaydedin ve firmaya giriş linki üretin.</p>
+            </div>
+            <div class="action-row">
+              <button class="button button--ghost button--sm" id="clearDraftBtn" type="button">
+                <i data-lucide="eraser"></i>
+                <span>Temizle</span>
+              </button>
+              <button class="button button--secondary button--sm" id="loadSamplePdfBtn" type="button">
+                <i data-lucide="file-search"></i>
+                <span>Mevcut PDF</span>
+              </button>
+            </div>
+          </div>
+          <div class="panel__body">
+            <div class="form-grid">
+              <label class="field">
+                <span>Teklif başlığı</span>
+                <input id="reqTitle" type="text" placeholder="Örn: A Blok Elektrik Tesisatı">
+              </label>
+              <label class="field">
+                <span>Sorumlu</span>
+                <input id="reqOwner" type="text" placeholder="Hazırlayan kişi / birim">
+              </label>
+            </div>
+
+            <div class="upload-card" id="filedrop">
+              <div>
+                <i data-lucide="upload-cloud"></i>
+              </div>
+              <div>
+                <strong>PDF yükle veya mevcut PDF'i oku</strong>
+                <span id="fname">Dosya seçilmedi</span>
+              </div>
+              <button class="button button--ghost button--sm" type="button">Gözat</button>
+            </div>
+            <input type="file" id="pdfInput" accept="application/pdf" hidden>
+
+            <div class="mini-stats">
+              <div><span>Kalem</span><strong id="metricItems">0</strong></div>
+              <div><span>Yaklaşık maliyet</span><strong id="metricEstimate">0,00 TL</strong></div>
+              <div><span>PDF</span><strong id="metricPdf">Yok</strong></div>
+            </div>
+
+            <div class="section-title">
+              <div>
+                <h3>İş Kalemleri</h3>
+                <p>Firmalar sadece kalem, miktar ve birim bilgilerini görür; yaklaşık maliyet gizlenir.</p>
+              </div>
+              <div class="action-row">
+                <button class="button button--ghost button--sm" id="toggleRawBtn" type="button">
+                  <i data-lucide="file-text"></i>
+                  <span>PDF Metni</span>
+                </button>
+                <button class="button button--secondary button--sm" id="addRowBtn" type="button">
+                  <i data-lucide="plus"></i>
+                  <span>Satır</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="table-shell">
+              <table>
+                <thead>
+                  <tr>
+                    <th class="num">#</th>
+                    <th>Poz No</th>
+                    <th>Kalem adı</th>
+                    <th class="num">Miktar</th>
+                    <th>Birim</th>
+                    <th class="num">Yaklaşık BF</th>
+                    <th class="num">Yaklaşık tutar</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="itemsBody"></tbody>
+              </table>
+              <div class="empty" id="itemsEmpty">Henüz kalem yok. PDF yükleyin veya satır ekleyin.</div>
+            </div>
+
+            <textarea class="raw-text" id="rawText" readonly></textarea>
+
+            <div id="createBanner"></div>
+            <div class="footer-actions">
+              <button class="button button--primary" id="saveRequestBtn" type="button">
+                <i data-lucide="save"></i>
+                <span>Dosyayı Kaydet</span>
+              </button>
+              <button class="button button--ghost" id="copyLastCodeBtn" type="button" disabled>
+                <i data-lucide="copy"></i>
+                <span>Kodu Kopyala</span>
+              </button>
+              <button class="button button--ghost" id="copyLastVendorLinkBtn" type="button" disabled>
+                <i data-lucide="link"></i>
+                <span>Firma Linki</span>
+              </button>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="view-comparison">
+        <section class="panel" id="comparisonPanel">
+          <div class="panel__head">
+            <div>
+              <h2 id="detailTitle">Karşılaştırma</h2>
+              <p id="detailMeta">Bir teklif dosyası seçin.</p>
+            </div>
+            <div class="action-row">
+              <button class="button button--ghost button--sm" id="detailCopyCodeBtn" type="button" disabled>
+                <i data-lucide="copy"></i>
+                <span>Kod</span>
+              </button>
+              <button class="button button--ghost button--sm" id="detailCopyVendorLinkBtn" type="button" disabled>
+                <i data-lucide="link"></i>
+                <span>Firma Linki</span>
+              </button>
+              <button class="button button--secondary button--sm" id="exportComparisonBtn" type="button" disabled>
+                <i data-lucide="download"></i>
+                <span>PDF</span>
+              </button>
+              <button class="button button--danger button--sm" id="deleteRequestBtn" type="button" disabled>
+                <i data-lucide="trash-2"></i>
+                <span>Sil</span>
+              </button>
+            </div>
+          </div>
+          <div class="panel__body">
+            <div class="mini-stats">
+              <div><span>Yaklaşık maliyet</span><strong id="detailEstimate">0,00 TL</strong></div>
+              <div><span>Firma teklifi</span><strong id="detailOfferCount">0</strong></div>
+              <div><span>En düşük</span><strong id="detailBestOffer">Yok</strong></div>
+            </div>
+
+            <div class="section-title">
+              <div>
+                <h3>Firma Teklifleri</h3>
+                <p>Toplam tutar ve yaklaşık maliyete göre fark.</p>
+              </div>
+            </div>
+            <div class="offer-grid" id="offersCards"></div>
+
+            <div class="section-title">
+              <div>
+                <h3>Kalem Bazlı Farklar</h3>
+                <p>Her kalemde firma birim fiyatı, yaklaşık birim fiyat ve yüzde fark.</p>
+              </div>
+            </div>
+            <div class="table-shell">
+              <table id="comparisonTable">
+                <thead id="comparisonHead"></thead>
+                <tbody id="comparisonBody"></tbody>
+              </table>
+              <div class="empty" id="comparisonEmpty">Bu dosyaya henüz firma fiyatı girilmedi.</div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

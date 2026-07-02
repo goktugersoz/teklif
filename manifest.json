@@ -1,0 +1,48 @@
+{
+  "name": "Teklif Yönetimi",
+  "short_name": "Teklif",
+  "description": "Teklif dosyası hazırlama, firma fiyat girişi ve SQL tabanlı teklif karşılaştırma uygulaması.",
+  "lang": "tr",
+  "dir": "ltr",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#eef2f6",
+  "theme_color": "#101826",
+  "categories": ["business", "productivity", "finance"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Yeni Teklif Dosyası",
+      "short_name": "Yeni Dosya",
+      "url": "index.html",
+      "icons": [{"src": "icons/icon-192.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "Firma Fiyat Girişi",
+      "short_name": "Firma",
+      "url": "vendor.html",
+      "icons": [{"src": "icons/icon-192.png", "sizes": "192x192"}]
+    }
+  ]
+}
