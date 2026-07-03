@@ -1,8 +1,8 @@
 {
-  "name": "Teklif Yönetimi",
-  "short_name": "Teklif",
+  "name": "Fiyatladim.",
+  "short_name": "Fiyatladim",
   "id": "/index.html",
-  "description": "Teklif dosyası hazırlama, firma fiyat girişi ve SQL tabanlı teklif karşılaştırma uygulaması.",
+  "description": "Teklif dosyası hazırlama, firma fiyat girişi ve SQL tabanlı fiyat karşılaştırma uygulaması.",
   "lang": "tr",
   "dir": "ltr",
   "start_url": "index.html",

@@ -22,7 +22,7 @@ const state = {
 };
 
 const viewMeta = {
-  dashboard: ["Yönetici Paneli", "Teklif Operasyon Merkezi"],
+  dashboard: ["Yönetici Paneli", "Fiyatladim. Operasyon Merkezi"],
   builder: ["Dosya Hazırlama", "Teklif Dosyası Oluştur"],
   comparison: ["Analiz", "Firma Teklif Karşılaştırması"]
 };

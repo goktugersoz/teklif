@@ -74,9 +74,9 @@ function createInstallSheet(){
     <section class="install-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="installSheetTitle">
       <div class="install-sheet__handle"></div>
       <div class="install-sheet__app">
-        <div class="brand__mark">T</div>
+        <img class="install-sheet__logo" src="icons/fiyatladim-logo.png" alt="Fiyatladim.">
         <div>
-          <h2 id="installSheetTitle">Teklif'i uygulama gibi kullan</h2>
+          <h2 id="installSheetTitle">Fiyatladim. uygulamasını kullan</h2>
           <p>Telefonda tam ekran açılır, ana ekrandan hızlı erişilir.</p>
         </div>
       </div>

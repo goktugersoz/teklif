@@ -64,6 +64,9 @@ i[data-lucide]{width:16px;height:16px;stroke-width:2}
   padding:8px 8px 16px;
   border-bottom:1px solid rgba(255,255,255,.08);
 }
+.brand--logo{
+  justify-content:flex-start;
+}
 .brand__mark{
   width:38px;
   height:38px;
@@ -72,6 +75,16 @@ i[data-lucide]{width:16px;height:16px;stroke-width:2}
   display:grid;
   place-items:center;
   font-weight:800;
+}
+.brand__logo{
+  display:block;
+  width:190px;
+  max-width:100%;
+  height:auto;
+  border-radius:16px;
+  background:#fff;
+  padding:8px 10px;
+  box-shadow:0 14px 34px rgba(10,24,48,.14);
 }
 .brand__title{font-weight:800;font-size:17px;line-height:1.1}
 .brand__subtitle{font-size:12px;color:#b7c4d4;margin-top:3px}
@@ -208,6 +221,16 @@ i[data-lucide]{width:16px;height:16px;stroke-width:2}
   align-items:center;
   gap:12px;
   margin-bottom:14px;
+}
+.install-sheet__logo{
+  display:block;
+  width:150px;
+  max-width:48%;
+  height:auto;
+  border-radius:14px;
+  background:#fff;
+  padding:7px 9px;
+  box-shadow:0 12px 28px rgba(15,23,42,.10);
 }
 .install-sheet__app h2{
   margin:0;
@@ -663,6 +686,17 @@ td input.num{text-align:right;font-family:var(--mono)}
   color:var(--muted);
   line-height:1.5;
 }
+.offline-logo{
+  display:block;
+  width:210px;
+  max-width:100%;
+  height:auto;
+  margin:0 auto 2px;
+  border-radius:18px;
+  background:#fff;
+  padding:8px 10px;
+  box-shadow:0 14px 32px rgba(15,23,42,.10);
+}
 
 .vendor-page{
   background:
@@ -712,6 +746,13 @@ td input.num{text-align:right;font-family:var(--mono)}
   align-items:center;
   gap:12px;
 }
+.vendor-cover__brand.brand--logo{
+  padding:0;
+  border:0;
+}
+.vendor-cover__brand .brand__logo{
+  width:220px;
+}
 .vendor-cover .brand__subtitle{
   color:var(--muted);
 }
@@ -734,7 +775,7 @@ td input.num{text-align:right;font-family:var(--mono)}
   max-width:290px;
   font-size:34px;
   line-height:1.05;
-  letter-spacing:-.04em;
+  letter-spacing:0;
   font-weight:850;
   color:var(--ink);
 }
@@ -788,6 +829,12 @@ td input.num{text-align:right;font-family:var(--mono)}
     padding:4px 8px 20px;
     border-bottom:0;
   }
+  .brand.brand--logo{
+    padding:4px 6px 22px;
+  }
+  .sidebar .brand__logo{
+    width:212px;
+  }
   .brand__mark{
     width:42px;
     height:42px;
@@ -796,7 +843,7 @@ td input.num{text-align:right;font-family:var(--mono)}
   }
   .brand__title{
     font-size:18px;
-    letter-spacing:-.01em;
+    letter-spacing:0;
   }
   .brand__subtitle{
     color:var(--muted);
@@ -840,7 +887,7 @@ td input.num{text-align:right;font-family:var(--mono)}
   .topbar h1{
     font-size:32px;
     line-height:1.08;
-    letter-spacing:-.035em;
+    letter-spacing:0;
     font-weight:820;
   }
   .topbar__actions{
@@ -902,7 +949,7 @@ td input.num{text-align:right;font-family:var(--mono)}
   .stat-card strong{
     margin-top:16px;
     font-size:28px;
-    letter-spacing:-.035em;
+    letter-spacing:0;
   }
   .stat-card--accent{
     background:linear-gradient(145deg,#1d1d1f,#343a46);
@@ -922,7 +969,7 @@ td input.num{text-align:right;font-family:var(--mono)}
   }
   .panel__head h2{
     font-size:19px;
-    letter-spacing:-.02em;
+    letter-spacing:0;
   }
   .panel__head p{
     color:var(--muted);
@@ -1025,7 +1072,7 @@ td input.num{text-align:right;font-family:var(--mono)}
   }
   .offer-card strong{
     font-size:21px;
-    letter-spacing:-.02em;
+    letter-spacing:0;
   }
   .firm-detail-card__head{
     padding:18px 20px;
@@ -1046,6 +1093,8 @@ td input.num{text-align:right;font-family:var(--mono)}
     overflow:auto;
   }
   .brand{border-bottom:0;padding:6px 10px}
+  .brand.brand--logo{padding:4px 8px}
+  .sidebar .brand__logo{width:180px}
   .nav{display:flex;min-width:max-content}
   .sidebar__footer{margin-left:auto;margin-top:0}
   .dashboard-grid,.vendor-grid{grid-template-columns:1fr}

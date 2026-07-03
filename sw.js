@@ -1,4 +1,4 @@
-const CACHE_NAME = "teklif-pwa-v8";
+const CACHE_NAME = "fiyatladim-pwa-v1";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -6,6 +6,7 @@ const APP_SHELL = [
   "./offline.html",
   "./manifest.json",
   "./styles/app.css",
+  "./icons/fiyatladim-logo.png",
   "./src/app.js",
   "./src/vendor.js",
   "./src/db.js",
