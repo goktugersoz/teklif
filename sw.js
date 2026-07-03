@@ -1,4 +1,4 @@
-const CACHE_NAME = "fiyatladim-pwa-v4";
+const CACHE_NAME = "fiyatladim-pwa-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -6,16 +6,16 @@ const APP_SHELL = [
   "./offline.html",
   "./manifest.json",
   "./styles/app.css",
-  "./icons/fiyatladim-logo.png?v=3",
+  "./fiyatladim-logo-v5.png",
   "./src/app.js",
   "./src/vendor.js",
   "./src/db.js",
   "./src/pdf-tools.js",
   "./src/pwa.js",
   "./src/utils.js",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png",
-  "./icons/maskable-512.png"
+  "./icon-192-v5.png",
+  "./icon-512-v5.png",
+  "./maskable-512-v5.png"
 ];
 
 self.addEventListener("install", event => {
