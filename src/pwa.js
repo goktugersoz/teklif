@@ -74,7 +74,7 @@ function createInstallSheet(){
     <section class="install-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="installSheetTitle">
       <div class="install-sheet__handle"></div>
       <div class="install-sheet__app">
-        <img class="install-sheet__logo" src="icons/fiyatladim-logo.png" alt="Fiyatladim.">
+        <img class="install-sheet__logo" src="./icons/fiyatladim-logo.png?v=3" alt="Fiyatladim." onerror="this.onerror=null;this.src='./icons/icon-192.png?v=3';this.classList.add('install-sheet__logo--icon')">
         <div>
           <h2 id="installSheetTitle">Fiyatladim. uygulamasını kullan</h2>
           <p>Telefonda tam ekran açılır, ana ekrandan hızlı erişilir.</p>

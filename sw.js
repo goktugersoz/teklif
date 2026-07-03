@@ -1,4 +1,4 @@
-const CACHE_NAME = "fiyatladim-pwa-v2";
+const CACHE_NAME = "fiyatladim-pwa-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -6,7 +6,7 @@ const APP_SHELL = [
   "./offline.html",
   "./manifest.json",
   "./styles/app.css",
-  "./icons/fiyatladim-logo.png",
+  "./icons/fiyatladim-logo.png?v=3",
   "./src/app.js",
   "./src/vendor.js",
   "./src/db.js",
