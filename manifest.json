@@ -1,6 +1,7 @@
 {
   "name": "Teklif Yönetimi",
   "short_name": "Teklif",
+  "id": "/index.html",
   "description": "Teklif dosyası hazırlama, firma fiyat girişi ve SQL tabanlı teklif karşılaştırma uygulaması.",
   "lang": "tr",
   "dir": "ltr",
@@ -8,9 +9,10 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#eef2f6",
-  "theme_color": "#101826",
+  "background_color": "#f5f7fb",
+  "theme_color": "#f5f7fb",
   "categories": ["business", "productivity", "finance"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "icons/icon-192.png",
