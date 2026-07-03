@@ -1,4 +1,4 @@
-const CACHE_NAME = "teklif-pwa-v7";
+const CACHE_NAME = "teklif-pwa-v8";
 const APP_SHELL = [
   "./",
   "./index.html",
