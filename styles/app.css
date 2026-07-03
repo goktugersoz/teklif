@@ -60,7 +60,10 @@ i[data-lucide]{width:16px;height:16px;stroke-width:2}
 }
 .login-brand-panel{
   display:flex;
+  flex-direction:column;
+  align-items:flex-end;
   justify-content:flex-end;
+  gap:18px;
 }
 .login-brand-panel__logo{
   display:block;
@@ -75,6 +78,15 @@ i[data-lucide]{width:16px;height:16px;stroke-width:2}
   width:150px;
   aspect-ratio:1;
   object-fit:contain;
+}
+.login-brand-panel__slogan{
+  max-width:420px;
+  margin:0;
+  color:var(--ink);
+  font-size:34px;
+  line-height:1.08;
+  font-weight:850;
+  text-align:right;
 }
 .login-card{
   width:min(460px,100%);
@@ -1255,6 +1267,7 @@ td input.num{text-align:right;font-family:var(--mono)}
     width:100%;
   }
   .login-brand-panel{
+    align-items:center;
     justify-content:center;
     margin-top:18px;
   }
@@ -1262,6 +1275,11 @@ td input.num{text-align:right;font-family:var(--mono)}
     width:min(300px,100%);
     border-radius:22px;
     padding:12px 15px;
+  }
+  .login-brand-panel__slogan{
+    max-width:310px;
+    font-size:26px;
+    text-align:center;
   }
   .login-card{
     border-radius:24px;
