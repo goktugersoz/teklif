@@ -1,4 +1,4 @@
-const CACHE_NAME = "fiyatladim-pwa-v1";
+const CACHE_NAME = "fiyatladim-pwa-v2";
 const APP_SHELL = [
   "./",
   "./index.html",

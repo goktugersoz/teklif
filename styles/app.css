@@ -652,9 +652,9 @@ td input.num{text-align:right;font-family:var(--mono)}
   position:fixed;
   left:-9999px;
   top:0;
-  width:1120px;
+  width:812px;
   background:#fff;
-  padding:32px;
+  padding:0;
   color:#111827;
 }
 .mono{font-family:var(--mono)}

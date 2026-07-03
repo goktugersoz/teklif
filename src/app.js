@@ -506,44 +506,111 @@ async function exportComparisonPdf(){
   root.className = "print-root";
   const estimate = estimateTotal(request.items);
   const totals = offers.map(offer => ({offer, total: offerTotal(request, offer)})).sort((a, b) => a.total - b.total);
+  const offerRank = new Map(totals.map((entry, index) => [entry.offer.offerId || entry.offer.id, index + 1]));
+  const reportDate = fmtDate(new Date().toISOString());
+  const reportRows = request.items.map((item, index) => {
+    const quantity = parseNumber(item.quantity);
+    const estimated = parseNumber(item.estimatedUnitPrice);
+    const estimatedLineTotal = Number.isFinite(quantity) && Number.isFinite(estimated) ? quantity * estimated : 0;
+    const offerRows = offers.map(offer => {
+      const row = (offer.items || []).find(x => x.itemId === item.id);
+      const price = Number(row?.unitPrice) || 0;
+      const lineTotal = Number.isFinite(quantity) ? quantity * price : 0;
+      const diff = diffInfo(price, Number.isFinite(estimated) ? estimated : 0);
+      return {
+        offer,
+        price,
+        lineTotal,
+        diff,
+        rank: offerRank.get(offer.offerId || offer.id) || 0
+      };
+    }).sort((a, b) => a.price - b.price || a.rank - b.rank);
+
+    return `
+      <section style="break-inside:avoid;page-break-inside:avoid;border:1px solid #d8e0e8;border-radius:14px;margin:0 0 14px;overflow:hidden;background:#fff">
+        <div style="padding:12px 14px;background:#f8fafc;border-bottom:1px solid #e5e7eb">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start">
+            <div>
+              <div style="font-size:11px;color:#64748b;font-weight:800;text-transform:uppercase">Kalem ${index + 1}</div>
+              <h2 style="margin:4px 0 4px;font-size:14px;line-height:1.35;color:#111827">${esc(item.description)}</h2>
+              <div style="font-size:11px;color:#475569">Poz No: ${esc(item.posNo || "-")} · Miktar: ${esc(item.quantity)} ${esc(item.unit)}</div>
+            </div>
+            <div style="min-width:142px;text-align:right;font-size:11px;color:#475569">
+              <div>Yaklaşık BF: <strong style="color:#111827">${Number.isFinite(estimated) ? fmtTL(estimated) : "—"}</strong></div>
+              <div>Yaklaşık Tutar: <strong style="color:#111827">${estimatedLineTotal ? fmtTL(estimatedLineTotal) : "—"}</strong></div>
+            </div>
+          </div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:10.5px">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding:7px 10px;border-bottom:1px solid #e5e7eb;color:#475569">Firma</th>
+              <th style="text-align:right;padding:7px 10px;border-bottom:1px solid #e5e7eb;color:#475569">Birim Fiyat</th>
+              <th style="text-align:right;padding:7px 10px;border-bottom:1px solid #e5e7eb;color:#475569">Tutar</th>
+              <th style="text-align:right;padding:7px 10px;border-bottom:1px solid #e5e7eb;color:#475569">Fark</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${offerRows.map(row => `
+              <tr>
+                <td style="padding:7px 10px;border-bottom:1px solid #eef2f7">
+                  <strong>${esc(row.offer.companyName)}</strong>
+                  <div style="font-size:9.5px;color:#64748b">Sıra: ${row.rank} · ${esc(row.offer.contactName || "-")}</div>
+                </td>
+                <td style="text-align:right;padding:7px 10px;border-bottom:1px solid #eef2f7">${fmtTL(row.price)}</td>
+                <td style="text-align:right;padding:7px 10px;border-bottom:1px solid #eef2f7">${fmtTL(row.lineTotal)}</td>
+                <td style="text-align:right;padding:7px 10px;border-bottom:1px solid #eef2f7;color:${row.diff.value > 0 ? "#b42318" : row.diff.value < 0 ? "#137333" : "#475569"};font-weight:800">${row.diff.text}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </section>
+    `;
+  }).join("");
+
   root.innerHTML = `
-    <div style="font-family:Arial,sans-serif;color:#111827">
-      <div style="border-bottom:3px solid #111827;padding-bottom:14px;margin-bottom:18px">
-        <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#0f766e;font-weight:800">Teklif Karşılaştırma Raporu</div>
-        <h1 style="margin:6px 0 4px;font-size:26px">${esc(request.title)}</h1>
-        <div style="font-size:12px;color:#5c6b7a">Kod: ${esc(request.id)} · Tarih: ${fmtDate(new Date().toISOString())} · Kalem: ${request.items.length}</div>
+    <div style="width:760px;padding:26px;font-family:Arial,sans-serif;color:#111827;background:#ffffff">
+      <div style="border-bottom:3px solid #111827;padding-bottom:14px;margin-bottom:16px">
+        <div style="font-size:11px;text-transform:uppercase;color:#0f766e;font-weight:800">Teklif Karşılaştırma Raporu</div>
+        <h1 style="margin:6px 0 4px;font-size:25px;line-height:1.15">${esc(request.title)}</h1>
+        <div style="font-size:11px;color:#5c6b7a">Kod: ${esc(request.id)} · Rapor Tarihi: ${reportDate} · Kalem: ${request.items.length}</div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px">
-        <div style="border:1px solid #d8e0e8;padding:10px"><div style="font-size:11px;color:#5c6b7a">Yaklaşık Maliyet</div><strong>${fmtTL(estimate)}</strong></div>
-        <div style="border:1px solid #d8e0e8;padding:10px"><div style="font-size:11px;color:#5c6b7a">Firma Sayısı</div><strong>${offers.length}</strong></div>
-        <div style="border:1px solid #d8e0e8;padding:10px"><div style="font-size:11px;color:#5c6b7a">En Düşük</div><strong>${fmtTL(totals[0].total)} · ${esc(totals[0].offer.companyName)}</strong></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div style="border:1px solid #d8e0e8;border-radius:12px;padding:10px;background:#fbfbfd"><div style="font-size:10px;color:#5c6b7a;text-transform:uppercase;font-weight:800">Yaklaşık Maliyet</div><strong style="font-size:16px">${fmtTL(estimate)}</strong></div>
+        <div style="border:1px solid #d8e0e8;border-radius:12px;padding:10px;background:#fbfbfd"><div style="font-size:10px;color:#5c6b7a;text-transform:uppercase;font-weight:800">Teklif Veren Firma</div><strong style="font-size:16px">${offers.length}</strong></div>
+        <div style="border:1px solid #d8e0e8;border-radius:12px;padding:10px;background:#fbfbfd"><div style="font-size:10px;color:#5c6b7a;text-transform:uppercase;font-weight:800">En Düşük Teklif</div><strong style="font-size:16px">${fmtTL(totals[0].total)}</strong></div>
+        <div style="border:1px solid #d8e0e8;border-radius:12px;padding:10px;background:#fbfbfd"><div style="font-size:10px;color:#5c6b7a;text-transform:uppercase;font-weight:800">En Düşük Firma</div><strong style="font-size:16px">${esc(totals[0].offer.companyName)}</strong></div>
       </div>
-      <table style="width:100%;border-collapse:collapse;font-size:11px">
-        <thead><tr>
-          <th style="text-align:right;border-bottom:2px solid #111827;padding:6px">#</th>
-          <th style="text-align:left;border-bottom:2px solid #111827;padding:6px">Kalem</th>
-          <th style="text-align:right;border-bottom:2px solid #111827;padding:6px">Miktar</th>
-          <th style="text-align:right;border-bottom:2px solid #111827;padding:6px">Yaklaşık BF</th>
-          ${offers.map(offer => `<th style="text-align:right;border-bottom:2px solid #111827;padding:6px">${esc(offer.companyName)}</th>`).join("")}
-        </tr></thead>
+
+      <h2 style="margin:18px 0 8px;font-size:15px">Firma Toplamları</h2>
+      <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:18px;border:1px solid #d8e0e8;border-radius:12px;overflow:hidden">
+        <thead>
+          <tr>
+            <th style="text-align:right;background:#f8fafc;border-bottom:1px solid #d8e0e8;padding:8px">#</th>
+            <th style="text-align:left;background:#f8fafc;border-bottom:1px solid #d8e0e8;padding:8px">Firma</th>
+            <th style="text-align:left;background:#f8fafc;border-bottom:1px solid #d8e0e8;padding:8px">Yetkili</th>
+            <th style="text-align:right;background:#f8fafc;border-bottom:1px solid #d8e0e8;padding:8px">Toplam</th>
+            <th style="text-align:right;background:#f8fafc;border-bottom:1px solid #d8e0e8;padding:8px">Yaklaşık Fark</th>
+          </tr>
+        </thead>
         <tbody>
-          ${request.items.map((item, index) => {
-            const estimated = parseNumber(item.estimatedUnitPrice);
-            return `<tr>
-              <td style="text-align:right;border-bottom:1px solid #e5e7eb;padding:6px">${index + 1}</td>
-              <td style="border-bottom:1px solid #e5e7eb;padding:6px">${esc(item.description)}</td>
-              <td style="text-align:right;border-bottom:1px solid #e5e7eb;padding:6px">${esc(item.quantity)} ${esc(item.unit)}</td>
-              <td style="text-align:right;border-bottom:1px solid #e5e7eb;padding:6px">${Number.isFinite(estimated) ? fmtTL(estimated) : "—"}</td>
-              ${offers.map(offer => {
-                const row = (offer.items || []).find(x => x.itemId === item.id);
-                const price = Number(row?.unitPrice) || 0;
-                const diff = diffInfo(price, Number.isFinite(estimated) ? estimated : 0);
-                return `<td style="text-align:right;border-bottom:1px solid #e5e7eb;padding:6px">${fmtTL(price)} / ${diff.text}</td>`;
-              }).join("")}
-            </tr>`;
+          ${totals.map((entry, index) => {
+            const diff = diffInfo(entry.total, estimate);
+            return `
+              <tr>
+                <td style="text-align:right;border-bottom:1px solid #eef2f7;padding:8px">${index + 1}</td>
+                <td style="border-bottom:1px solid #eef2f7;padding:8px"><strong>${esc(entry.offer.companyName)}</strong></td>
+                <td style="border-bottom:1px solid #eef2f7;padding:8px;color:#64748b">${esc(entry.offer.contactName || "-")}</td>
+                <td style="text-align:right;border-bottom:1px solid #eef2f7;padding:8px"><strong>${fmtTL(entry.total)}</strong></td>
+                <td style="text-align:right;border-bottom:1px solid #eef2f7;padding:8px;color:${diff.value > 0 ? "#b42318" : diff.value < 0 ? "#137333" : "#475569"};font-weight:800">${diff.text}</td>
+              </tr>
+            `;
           }).join("")}
         </tbody>
       </table>
+
+      <h2 style="margin:18px 0 8px;font-size:15px">Kalem Bazlı Tüm Firma Teklifleri</h2>
+      ${reportRows}
     </div>
   `;
   document.body.appendChild(root);
@@ -551,9 +618,9 @@ async function exportComparisonPdf(){
     const canvas = await html2canvas(root, {scale: 2, backgroundColor: "#ffffff"});
     const imgData = canvas.toDataURL("image/png");
     const {jsPDF} = window.jspdf;
-    const pdf = new jsPDF("l", "mm", "a4");
-    const pageWidth = 297;
-    const pageHeight = 210;
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = 210;
+    const pageHeight = 297;
     const imgWidth = pageWidth;
     const imgHeight = canvas.height * imgWidth / canvas.width;
     let heightLeft = imgHeight;
