@@ -143,14 +143,14 @@ async function init(){
   try{
     registerPwa();
     await db.initDb();
-    $("dbStatus").textContent = "Hazır";
+    if($("dbStatus")) $("dbStatus").textContent = "Hazır";
     applyCodeFromUrl();
     $("fetchReqBtn").addEventListener("click", fetchVendorRequest);
     $("submitOfferBtn").addEventListener("click", submitOffer);
     $("resetVendorBtn").addEventListener("click", resetForm);
   }catch(err){
     console.error(err);
-    $("dbStatus").textContent = "Hata";
+    if($("dbStatus")) $("dbStatus").textContent = "Hata";
     $("fetchBanner").innerHTML = banner(`SQL bağlantısı başlatılamadı: ${esc(err.message || err)}`, "err");
   }finally{
     refreshIcons();
