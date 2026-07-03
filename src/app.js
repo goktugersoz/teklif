@@ -6,6 +6,10 @@ import {
   itemId, offerTotal, parseNumber, uid, vendorLink
 } from "./utils.js";
 
+const ADMIN_AUTH_KEY = "fiyatladim.admin.authenticated";
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "admin123";
+
 const state = {
   requests: [],
   offers: [],
@@ -22,6 +26,8 @@ const state = {
   vendorItems: []
 };
 
+let adminAppStarted = false;
+
 const viewMeta = {
   dashboard: ["YÃ¶netici Paneli", "Fiyatladim. Operasyon Merkezi"],
   builder: ["Dosya HazÄ±rlama", "Teklif DosyasÄ± OluÅŸtur"],
@@ -34,6 +40,61 @@ function refreshIcons(){
 
 function offerKey(offer){
   return String(offer?.offerId || offer?.id || `${offer?.requestId || ""}:${offer?.companyName || ""}:${offer?.submittedAt || ""}`);
+}
+
+function isAdminAuthenticated(){
+  return sessionStorage.getItem(ADMIN_AUTH_KEY) === "1";
+}
+
+function showAdminShell(){
+  const loginScreen = $("loginScreen");
+  const adminApp = $("adminApp");
+  if(loginScreen) loginScreen.hidden = true;
+  if(adminApp) adminApp.hidden = false;
+  document.body.classList.remove("login-active");
+}
+
+function showLoginScreen(){
+  const loginScreen = $("loginScreen");
+  const adminApp = $("adminApp");
+  if(loginScreen) loginScreen.hidden = false;
+  if(adminApp) adminApp.hidden = true;
+  document.body.classList.add("login-active");
+  $("adminUsername")?.focus();
+  refreshIcons();
+}
+
+function wireAdminLogin(){
+  const form = $("adminLoginForm");
+  if(!form || form.dataset.wired === "1") return;
+  form.dataset.wired = "1";
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    const username = $("adminUsername").value.trim();
+    const password = $("adminPassword").value;
+    $("loginBanner").innerHTML = "";
+
+    if(username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD){
+      $("loginBanner").innerHTML = banner("Kullanıcı adı veya şifre hatalı.", "err");
+      $("adminPassword").select();
+      return;
+    }
+
+    sessionStorage.setItem(ADMIN_AUTH_KEY, "1");
+    $("adminPassword").value = "";
+    showAdminShell();
+    await startAdminApp();
+  });
+}
+
+function wireLogout(){
+  const button = $("logoutBtn");
+  if(!button || button.dataset.wired === "1") return;
+  button.dataset.wired = "1";
+  button.addEventListener("click", () => {
+    sessionStorage.removeItem(ADMIN_AUTH_KEY);
+    showLoginScreen();
+  });
 }
 
 function setView(viewName){
@@ -795,14 +856,16 @@ function applyVendorModeFromUrl(){
   window.location.replace(vendorLink(code));
 }
 
-async function init(){
+async function startAdminApp(){
+  if(adminAppStarted) return;
+  adminAppStarted = true;
   try{
-    registerPwa();
     configurePdfWorker();
     wireNavigation();
     wireBuilder();
     wireComparisonActions();
     wireVendor();
+    wireLogout();
     state.db = await db.initDb();
     $("dbStatus").textContent = "HazÄ±r";
     renderDraftItems();
@@ -816,6 +879,20 @@ async function init(){
   }finally{
     refreshIcons();
   }
+}
+
+async function init(){
+  registerPwa();
+  wireAdminLogin();
+  applyVendorModeFromUrl();
+
+  if(!isAdminAuthenticated()){
+    showLoginScreen();
+    return;
+  }
+
+  showAdminShell();
+  await startAdminApp();
 }
 
 init();

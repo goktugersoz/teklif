@@ -14,8 +14,36 @@
   <link rel="apple-touch-icon" href="./icon-192-v5.png">
   <link rel="stylesheet" href="styles/app.css">
 </head>
-<body>
-  <div class="app-shell">
+<body class="admin-page">
+  <main class="login-screen" id="loginScreen">
+    <section class="login-card">
+      <div class="login-card__brand">
+        <img class="login-card__logo" src="./fiyatladim-logo-v5.png" alt="Fiyatladim." onerror="this.onerror=null;this.src='./icon-192-v5.png';this.classList.add('login-card__logo--icon')">
+      </div>
+      <div class="login-card__head">
+        <p class="eyebrow">Yönetici Girişi</p>
+        <h1>Operasyon Merkezi</h1>
+        <p>Teklif dosyalarını ve firma karşılaştırmalarını yönetmek için giriş yapın.</p>
+      </div>
+      <form class="login-form" id="adminLoginForm" autocomplete="off">
+        <label class="field">
+          <span>Kullanıcı adı</span>
+          <input id="adminUsername" name="username" type="text" placeholder="Kullanıcı adı" autocomplete="username" required>
+        </label>
+        <label class="field">
+          <span>Şifre</span>
+          <input id="adminPassword" name="password" type="password" placeholder="Şifre" autocomplete="current-password" required>
+        </label>
+        <div id="loginBanner"></div>
+        <button class="button button--primary login-button" type="submit">
+          <i data-lucide="log-in"></i>
+          <span>Giriş Yap</span>
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <div class="app-shell" id="adminApp" hidden>
     <aside class="sidebar">
       <div class="brand brand--logo">
         <img class="brand__logo" src="./fiyatladim-logo-v5.png" alt="Fiyatladim." onerror="this.onerror=null;this.src='./icon-192-v5.png';this.classList.add('brand__logo--icon')">
@@ -61,6 +89,10 @@
           <button class="button button--ghost" id="installAppBtn" type="button" hidden>
             <i data-lucide="download"></i>
             <span>Yükle</span>
+          </button>
+          <button class="button button--ghost" id="logoutBtn" type="button">
+            <i data-lucide="log-out"></i>
+            <span>Çıkış</span>
           </button>
           <button class="button button--primary" id="quickNewBtn" type="button">
             <i data-lucide="plus"></i>

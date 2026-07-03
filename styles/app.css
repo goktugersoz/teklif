@@ -39,6 +39,71 @@ button,input,textarea{font:inherit}
 button{cursor:pointer}
 i[data-lucide]{width:16px;height:16px;stroke-width:2}
 
+[hidden]{display:none!important}
+
+.login-screen{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:28px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(10,132,255,.12), transparent 30%),
+    radial-gradient(circle at 88% 8%, rgba(139,92,246,.10), transparent 28%),
+    var(--bg);
+}
+.login-card{
+  width:min(460px,100%);
+  border:1px solid rgba(229,231,238,.92);
+  border-radius:30px;
+  background:rgba(255,255,255,.82);
+  box-shadow:0 28px 80px rgba(29,29,31,.12);
+  backdrop-filter:blur(24px) saturate(1.2);
+  padding:28px;
+}
+.login-card__brand{
+  display:flex;
+  margin-bottom:28px;
+}
+.login-card__logo{
+  display:block;
+  width:214px;
+  max-width:100%;
+  height:auto;
+  border-radius:18px;
+  background:#fff;
+  padding:9px 12px;
+  box-shadow:0 14px 34px rgba(10,24,48,.12);
+}
+.login-card__logo--icon{
+  width:72px;
+  aspect-ratio:1;
+  object-fit:contain;
+}
+.login-card__head{
+  margin-bottom:22px;
+}
+.login-card__head h1{
+  margin:0;
+  color:var(--ink);
+  font-size:32px;
+  line-height:1.1;
+  font-weight:850;
+}
+.login-card__head p:not(.eyebrow){
+  margin:10px 0 0;
+  color:var(--muted);
+  line-height:1.55;
+}
+.login-form{
+  display:grid;
+  gap:14px;
+}
+.login-button{
+  width:100%;
+  min-height:48px;
+  margin-top:2px;
+}
+
 .app-shell{
   min-height:100vh;
   display:grid;
@@ -1143,6 +1208,24 @@ td input.num{text-align:right;font-family:var(--mono)}
 
 @media (max-width:720px){
   body{background:#f5f7fa}
+  .login-screen{
+    align-items:start;
+    padding:18px 14px;
+  }
+  .login-card{
+    margin-top:18px;
+    border-radius:24px;
+    padding:22px;
+  }
+  .login-card__brand{
+    margin-bottom:24px;
+  }
+  .login-card__logo{
+    width:190px;
+  }
+  .login-card__head h1{
+    font-size:28px;
+  }
   .workspace{padding:12px 12px calc(88px + env(safe-area-inset-bottom))}
   .topbar,.panel__head,.section-title{align-items:stretch;flex-direction:column}
   .topbar__actions,.action-row,.footer-actions{width:100%}
