@@ -29,9 +29,9 @@ const state = {
 let adminAppStarted = false;
 
 const viewMeta = {
-  dashboard: ["YÃ¶netici Paneli", "Fiyatladim. Operasyon Merkezi"],
-  builder: ["Dosya HazÄ±rlama", "Teklif DosyasÄ± OluÅŸtur"],
-  comparison: ["Analiz", "Firma Teklif KarÅŸÄ±laÅŸtÄ±rmasÄ±"]
+  dashboard: ["Yönetici Paneli", "Fiyatladim. Operasyon Merkezi"],
+  builder: ["Dosya Hazırlama", "Teklif Dosyası Oluştur"],
+  comparison: ["Analiz", "Firma Teklif Karşılaştırması"]
 };
 
 function refreshIcons(){
@@ -144,7 +144,7 @@ function renderDashboard(){
 function renderRequestsList(){
   const container = $("dashboardRequests");
   if(!state.requests.length){
-    container.innerHTML = `<div class="summary-empty">HenÃ¼z teklif dosyasÄ± yok.</div>`;
+    container.innerHTML = `<div class="summary-empty">Henüz teklif dosyası yok.</div>`;
     renderSelectedSummary();
     return;
   }
@@ -158,7 +158,7 @@ function renderRequestsList(){
       <div class="request-card__top">
         <div>
           <h3>${esc(request.title)}</h3>
-          <p>${esc(request.id)} Â· ${request.items.length} kalem Â· ${fmtDate(request.createdAt)}</p>
+          <p>${esc(request.id)} · ${request.items.length} kalem · ${fmtDate(request.createdAt)}</p>
         </div>
         <span class="badge ${offerCount ? "" : "badge--gray"}">${offerCount} teklif</span>
       </div>
@@ -175,22 +175,22 @@ function renderRequestsList(){
 function renderSelectedSummary(){
   const wrap = $("selectedSummary");
   if(!state.selectedRequest){
-    $("selectedSummaryText").textContent = "HenÃ¼z dosya seÃ§ilmedi.";
+    $("selectedSummaryText").textContent = "Henüz dosya seçilmedi.";
     $("selectedVendorLinkBtn").disabled = true;
-    wrap.innerHTML = `<div class="summary-empty">Sol listeden bir teklif dosyasÄ± seÃ§in.</div>`;
+    wrap.innerHTML = `<div class="summary-empty">Sol listeden bir teklif dosyası seçin.</div>`;
     return;
   }
   const request = state.selectedRequest;
   const offers = state.selectedOffers;
   const estimate = estimateTotal(request.items);
   const totals = offers.map(offer => ({offer, total: offerTotal(request, offer)})).sort((a, b) => a.total - b.total);
-  $("selectedSummaryText").textContent = `${request.id} Â· ${request.items.length} kalem Â· ${offers.length} firma teklifi`;
+  $("selectedSummaryText").textContent = `${request.id} · ${request.items.length} kalem · ${offers.length} firma teklifi`;
   $("selectedVendorLinkBtn").disabled = false;
   wrap.innerHTML = `
     <div class="summary-grid">
-      <div><span>YaklaÅŸÄ±k maliyet</span><strong>${fmtTL(estimate)}</strong></div>
-      <div><span>En dÃ¼ÅŸÃ¼k teklif</span><strong>${totals.length ? fmtTL(totals[0].total) : "Yok"}</strong></div>
-      <div><span>Firma sayÄ±sÄ±</span><strong>${offers.length}</strong></div>
+      <div><span>Yaklaşık maliyet</span><strong>${fmtTL(estimate)}</strong></div>
+      <div><span>En düşük teklif</span><strong>${totals.length ? fmtTL(totals[0].total) : "Yok"}</strong></div>
+      <div><span>Firma sayısı</span><strong>${offers.length}</strong></div>
     </div>
     <div class="table-shell">
       <table>
@@ -199,7 +199,7 @@ function renderSelectedSummary(){
           ${totals.map(row => {
             const diff = diffInfo(row.total, estimate);
             return `<tr><td>${esc(row.offer.companyName)}</td><td class="num">${fmtTL(row.total)}</td><td class="num ${diff.cls}">${diff.text}</td></tr>`;
-          }).join("") || `<tr><td colspan="3" class="empty">HenÃ¼z firma teklifi yok.</td></tr>`}
+          }).join("") || `<tr><td colspan="3" class="empty">Henüz firma teklifi yok.</td></tr>`}
         </tbody>
       </table>
     </div>
@@ -221,7 +221,7 @@ function renderDraftItems(){
     tr.innerHTML = `
       <td class="num">${index + 1}</td>
       <td><input data-id="${item.id}" data-field="posNo" value="${esc(item.posNo)}" placeholder="Poz no"></td>
-      <td><input data-id="${item.id}" data-field="description" value="${esc(item.description)}" placeholder="Ä°ÅŸ kalemi adÄ±"></td>
+      <td><input data-id="${item.id}" data-field="description" value="${esc(item.description)}" placeholder="İş kalemi adı"></td>
       <td><input class="num" data-id="${item.id}" data-field="quantity" value="${esc(item.quantity)}" inputmode="decimal"></td>
       <td><input data-id="${item.id}" data-field="unit" value="${esc(item.unit)}" placeholder="adet"></td>
       <td><input class="num" data-id="${item.id}" data-field="estimatedUnitPrice" value="${esc(item.estimatedUnitPrice)}" inputmode="decimal"></td>
@@ -259,7 +259,7 @@ function renderDraftItems(){
 function lineEstimate(item){
   const q = parseNumber(item.quantity);
   const p = parseNumber(item.estimatedUnitPrice);
-  return Number.isFinite(q) && Number.isFinite(p) ? fmtTL(q * p) : "â€”";
+  return Number.isFinite(q) && Number.isFinite(p) ? fmtTL(q * p) : "—";
 }
 
 function addDraftItem(prefill = {}){
@@ -280,7 +280,7 @@ function clearDraft(){
   state.pdfName = "";
   $("reqTitle").value = "";
   $("reqOwner").value = "";
-  $("fname").textContent = "Dosya seÃ§ilmedi";
+  $("fname").textContent = "Dosya seçilmedi";
   $("rawText").value = "";
   $("rawText").classList.remove("is-open");
   $("createBanner").innerHTML = "";
@@ -297,13 +297,13 @@ async function loadPdfFile(file){
     state.pdfName = file.name;
     $("rawText").value = text;
     state.draftItems = parsed.length ? parsed : fallbackRowsFromText(text);
-    $("fname").textContent = parsed.length ? `${file.name} Â· ${parsed.length} kalem bulundu` : `${file.name} Â· metin Ã§Ä±karÄ±ldÄ±`;
+    $("fname").textContent = parsed.length ? `${file.name} · ${parsed.length} kalem bulundu` : `${file.name} · metin çıkarıldı`;
     if(!$("reqTitle").value.trim()) $("reqTitle").value = file.name.replace(/\.pdf$/i, "");
     renderDraftItems();
   }catch(err){
     console.error(err);
-    $("fname").textContent = file.name + " okunamadÄ±";
-    $("createBanner").innerHTML = banner(esc(err.message || "PDF okunurken hata oluÅŸtu."), "err");
+    $("fname").textContent = file.name + " okunamadı";
+    $("createBanner").innerHTML = banner(esc(err.message || "PDF okunurken hata oluştu."), "err");
   }
 }
 
@@ -316,11 +316,11 @@ function wireBuilder(){
   $("loadSamplePdfBtn").addEventListener("click", async () => {
     try{
       const response = await fetch("ffffff.pdf");
-      if(!response.ok) throw new Error("ffffff.pdf bulunamadÄ±.");
+      if(!response.ok) throw new Error("ffffff.pdf bulunamadı.");
       const blob = await response.blob();
       await loadPdfFile(new File([blob], "ffffff.pdf", {type: "application/pdf"}));
     }catch{
-      $("createBanner").innerHTML = banner("Mevcut PDF okunamadÄ±. DosyayÄ± GÃ¶zat ile seÃ§in.", "err");
+      $("createBanner").innerHTML = banner("Mevcut PDF okunamadı. Dosyayı Gözat ile seçin.", "err");
     }
   });
   $("addRowBtn").addEventListener("click", () => {
@@ -349,11 +349,11 @@ async function saveRequest(){
     .filter(item => item.description);
 
   if(!title){
-    $("createBanner").innerHTML = banner("Teklif baÅŸlÄ±ÄŸÄ± girin.", "err");
+    $("createBanner").innerHTML = banner("Teklif başlığı girin.", "err");
     return;
   }
   if(!items.length){
-    $("createBanner").innerHTML = banner("En az bir iÅŸ kalemi ekleyin.", "err");
+    $("createBanner").innerHTML = banner("En az bir iş kalemi ekleyin.", "err");
     return;
   }
 
@@ -372,7 +372,7 @@ async function saveRequest(){
   state.lastCode = request.id;
   $("copyLastCodeBtn").disabled = false;
   $("copyLastVendorLinkBtn").disabled = false;
-  $("createBanner").innerHTML = banner(`Teklif dosyasÄ± kaydedildi. Firma giriÅŸ kodu: <strong class="mono">${request.id}</strong>`, "ok");
+  $("createBanner").innerHTML = banner(`Teklif dosyası kaydedildi. Firma giriş kodu: <strong class="mono">${request.id}</strong>`, "ok");
   await refreshAll();
   await openRequestDetail(request.id);
 }
@@ -560,7 +560,7 @@ function wireComparisonActions(){
   $("exportComparisonBtn").addEventListener("click", exportComparisonPdf);
   $("deleteRequestBtn").addEventListener("click", async () => {
     if(!state.selectedRequestId) return;
-    if(!confirm("Bu teklif dosyasÄ± ve baÄŸlÄ± firma teklifleri silinsin mi?")) return;
+    if(!confirm("Bu teklif dosyası ve bağlı firma teklifleri silinsin mi?")) return;
     await db.deleteOffersForRequest(state.selectedRequestId);
     await db.remove("requests", state.selectedRequestId);
     state.selectedRequestId = null;
@@ -575,8 +575,8 @@ function wireComparisonActions(){
 
 function resetComparison(){
   state.selectedOfferKey = null;
-  $("detailTitle").textContent = "KarÅŸÄ±laÅŸtÄ±rma";
-  $("detailMeta").textContent = "Bir teklif dosyasÄ± seÃ§in.";
+  $("detailTitle").textContent = "Karşılaştırma";
+  $("detailMeta").textContent = "Bir teklif dosyası seçin.";
   $("detailEstimate").textContent = fmtTL(0);
   $("detailOfferCount").textContent = "0";
   $("detailBestOffer").textContent = "Yok";
@@ -624,11 +624,11 @@ async function exportComparisonPdf(){
             <div>
               <div style="font-size:11px;color:#64748b;font-weight:800;text-transform:uppercase">Kalem ${index + 1}</div>
               <h2 style="margin:4px 0 4px;font-size:14px;line-height:1.35;color:#111827">${esc(item.description)}</h2>
-              <div style="font-size:11px;color:#475569">Poz No: ${esc(item.posNo || "-")} Â· Miktar: ${esc(item.quantity)} ${esc(item.unit)}</div>
+              <div style="font-size:11px;color:#475569">Poz No: ${esc(item.posNo || "-")} · Miktar: ${esc(item.quantity)} ${esc(item.unit)}</div>
             </div>
             <div style="min-width:142px;text-align:right;font-size:11px;color:#475569">
-              <div>YaklaÅŸÄ±k BF: <strong style="color:#111827">${Number.isFinite(estimated) ? fmtTL(estimated) : "â€”"}</strong></div>
-              <div>YaklaÅŸÄ±k Tutar: <strong style="color:#111827">${estimatedLineTotal ? fmtTL(estimatedLineTotal) : "â€”"}</strong></div>
+              <div>Yaklaşık BF: <strong style="color:#111827">${Number.isFinite(estimated) ? fmtTL(estimated) : "—"}</strong></div>
+              <div>Yaklaşık Tutar: <strong style="color:#111827">${estimatedLineTotal ? fmtTL(estimatedLineTotal) : "—"}</strong></div>
             </div>
           </div>
         </div>
@@ -646,7 +646,7 @@ async function exportComparisonPdf(){
               <tr>
                 <td style="padding:7px 10px;border-bottom:1px solid #eef2f7">
                   <strong>${esc(row.offer.companyName)}</strong>
-                  <div style="font-size:9.5px;color:#64748b">SÄ±ra: ${row.rank} Â· ${esc(row.offer.contactName || "-")}</div>
+                  <div style="font-size:9.5px;color:#64748b">Sıra: ${row.rank} · ${esc(row.offer.contactName || "-")}</div>
                 </td>
                 <td style="text-align:right;padding:7px 10px;border-bottom:1px solid #eef2f7">${fmtTL(row.price)}</td>
                 <td style="text-align:right;padding:7px 10px;border-bottom:1px solid #eef2f7">${fmtTL(row.lineTotal)}</td>
@@ -662,18 +662,18 @@ async function exportComparisonPdf(){
   root.innerHTML = `
     <div style="width:760px;padding:26px;font-family:Arial,sans-serif;color:#111827;background:#ffffff">
       <div style="border-bottom:3px solid #111827;padding-bottom:14px;margin-bottom:16px">
-        <div style="font-size:11px;text-transform:uppercase;color:#0f766e;font-weight:800">Teklif KarÅŸÄ±laÅŸtÄ±rma Raporu</div>
+        <div style="font-size:11px;text-transform:uppercase;color:#0f766e;font-weight:800">Teklif Karşılaştırma Raporu</div>
         <h1 style="margin:6px 0 4px;font-size:25px;line-height:1.15">${esc(request.title)}</h1>
-        <div style="font-size:11px;color:#5c6b7a">Kod: ${esc(request.id)} Â· Rapor Tarihi: ${reportDate} Â· Kalem: ${request.items.length}</div>
+        <div style="font-size:11px;color:#5c6b7a">Kod: ${esc(request.id)} · Rapor Tarihi: ${reportDate} · Kalem: ${request.items.length}</div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-        <div style="border:1px solid #d8e0e8;border-radius:12px;padding:10px;background:#fbfbfd"><div style="font-size:10px;color:#5c6b7a;text-transform:uppercase;font-weight:800">YaklaÅŸÄ±k Maliyet</div><strong style="font-size:16px">${fmtTL(estimate)}</strong></div>
+        <div style="border:1px solid #d8e0e8;border-radius:12px;padding:10px;background:#fbfbfd"><div style="font-size:10px;color:#5c6b7a;text-transform:uppercase;font-weight:800">Yaklaşık Maliyet</div><strong style="font-size:16px">${fmtTL(estimate)}</strong></div>
         <div style="border:1px solid #d8e0e8;border-radius:12px;padding:10px;background:#fbfbfd"><div style="font-size:10px;color:#5c6b7a;text-transform:uppercase;font-weight:800">Teklif Veren Firma</div><strong style="font-size:16px">${offers.length}</strong></div>
-        <div style="border:1px solid #d8e0e8;border-radius:12px;padding:10px;background:#fbfbfd"><div style="font-size:10px;color:#5c6b7a;text-transform:uppercase;font-weight:800">En DÃ¼ÅŸÃ¼k Teklif</div><strong style="font-size:16px">${fmtTL(totals[0].total)}</strong></div>
-        <div style="border:1px solid #d8e0e8;border-radius:12px;padding:10px;background:#fbfbfd"><div style="font-size:10px;color:#5c6b7a;text-transform:uppercase;font-weight:800">En DÃ¼ÅŸÃ¼k Firma</div><strong style="font-size:16px">${esc(totals[0].offer.companyName)}</strong></div>
+        <div style="border:1px solid #d8e0e8;border-radius:12px;padding:10px;background:#fbfbfd"><div style="font-size:10px;color:#5c6b7a;text-transform:uppercase;font-weight:800">En Düşük Teklif</div><strong style="font-size:16px">${fmtTL(totals[0].total)}</strong></div>
+        <div style="border:1px solid #d8e0e8;border-radius:12px;padding:10px;background:#fbfbfd"><div style="font-size:10px;color:#5c6b7a;text-transform:uppercase;font-weight:800">En Düşük Firma</div><strong style="font-size:16px">${esc(totals[0].offer.companyName)}</strong></div>
       </div>
 
-      <h2 style="margin:18px 0 8px;font-size:15px">Firma ToplamlarÄ±</h2>
+      <h2 style="margin:18px 0 8px;font-size:15px">Firma Toplamları</h2>
       <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:18px;border:1px solid #d8e0e8;border-radius:12px;overflow:hidden">
         <thead>
           <tr>
@@ -681,7 +681,7 @@ async function exportComparisonPdf(){
             <th style="text-align:left;background:#f8fafc;border-bottom:1px solid #d8e0e8;padding:8px">Firma</th>
             <th style="text-align:left;background:#f8fafc;border-bottom:1px solid #d8e0e8;padding:8px">Yetkili</th>
             <th style="text-align:right;background:#f8fafc;border-bottom:1px solid #d8e0e8;padding:8px">Toplam</th>
-            <th style="text-align:right;background:#f8fafc;border-bottom:1px solid #d8e0e8;padding:8px">YaklaÅŸÄ±k Fark</th>
+            <th style="text-align:right;background:#f8fafc;border-bottom:1px solid #d8e0e8;padding:8px">Yaklaşık Fark</th>
           </tr>
         </thead>
         <tbody>
@@ -700,7 +700,7 @@ async function exportComparisonPdf(){
         </tbody>
       </table>
 
-      <h2 style="margin:18px 0 8px;font-size:15px">Kalem BazlÄ± TÃ¼m Firma Teklifleri</h2>
+      <h2 style="margin:18px 0 8px;font-size:15px">Kalem Bazlı Tüm Firma Teklifleri</h2>
       ${reportRows}
     </div>
   `;
@@ -755,12 +755,12 @@ async function fetchVendorRequest(){
     return;
   }
   if(!companyName){
-    $("fetchBanner").innerHTML = banner("Firma Ã¼nvanÄ± girin.", "err");
+    $("fetchBanner").innerHTML = banner("Firma ünvanı girin.", "err");
     return;
   }
   const request = await db.get("requests", code);
   if(!request){
-    $("fetchBanner").innerHTML = banner("Bu kodla teklif dosyasÄ± bulunamadÄ±.", "err");
+    $("fetchBanner").innerHTML = banner("Bu kodla teklif dosyası bulunamadı.", "err");
     return;
   }
 
@@ -781,7 +781,7 @@ function renderVendorWork(){
   const request = state.vendorRequest;
   $("vendorWorkArea").classList.add("is-open");
   $("vendorTitle").textContent = request.title;
-  $("vendorMeta").textContent = `Kod: ${request.id} Â· ${request.items.length} kalem`;
+  $("vendorMeta").textContent = `Kod: ${request.id} · ${request.items.length} kalem`;
   const body = $("vendorItemsBody");
   body.innerHTML = "";
   state.vendorItems.forEach((item, index) => {
@@ -812,7 +812,7 @@ function renderVendorWork(){
 function vendorLineTotal(item){
   const q = parseNumber(item.quantity);
   const p = parseNumber(item.unitPrice);
-  return Number.isFinite(q) && Number.isFinite(p) ? fmtTL(q * p) : "â€”";
+  return Number.isFinite(q) && Number.isFinite(p) ? fmtTL(q * p) : "—";
 }
 
 function renderVendorTotal(){
@@ -828,7 +828,7 @@ async function submitVendorOffer(){
   if(!state.vendorRequest) return;
   const missing = state.vendorItems.some(item => !Number.isFinite(parseNumber(item.unitPrice)));
   if(missing){
-    $("submitBanner").innerHTML = banner("TÃ¼m kalemler iÃ§in birim fiyat girin.", "err");
+    $("submitBanner").innerHTML = banner("Tüm kalemler için birim fiyat girin.", "err");
     return;
   }
   const offer = {
@@ -844,7 +844,7 @@ async function submitVendorOffer(){
     submittedAt: new Date().toISOString()
   };
   await db.put("offers", offer);
-  $("submitBanner").innerHTML = banner(`Teklifiniz kaydedildi. KayÄ±t no: <strong class="mono">${offer.offerId}</strong>`, "ok");
+  $("submitBanner").innerHTML = banner(`Teklifiniz kaydedildi. Kayıt no: <strong class="mono">${offer.offerId}</strong>`, "ok");
   await refreshAll();
   if(state.selectedRequestId === state.vendorRequest.id) await openRequestDetail(state.vendorRequest.id, false);
 }
@@ -867,7 +867,7 @@ async function startAdminApp(){
     wireVendor();
     wireLogout();
     state.db = await db.initDb();
-    $("dbStatus").textContent = "HazÄ±r";
+    $("dbStatus").textContent = "Hazır";
     renderDraftItems();
     resetComparison();
     await refreshAll();
@@ -875,7 +875,7 @@ async function startAdminApp(){
   }catch(err){
     console.error(err);
     $("dbStatus").textContent = "Hata";
-    document.querySelector(".workspace").insertAdjacentHTML("afterbegin", banner(`SQL baÄŸlantÄ±sÄ± baÅŸlatÄ±lamadÄ±: ${esc(err.message || err)}`, "err"));
+    document.querySelector(".workspace").insertAdjacentHTML("afterbegin", banner(`SQL bağlantısı başlatılamadı: ${esc(err.message || err)}`, "err"));
   }finally{
     refreshIcons();
   }

@@ -1,5 +1,7 @@
 Options -Indexes
 
+AddDefaultCharset UTF-8
+AddCharset UTF-8 .html .css .js .json
 AddType application/manifest+json .json
 
 <FilesMatch "^(schema.*\.sql|README-HOSTING\.md|render\.yaml|Dockerfile|render-start\.sh)$">
