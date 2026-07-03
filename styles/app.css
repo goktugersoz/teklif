@@ -820,9 +820,8 @@ td input.num{text-align:right;font-family:var(--mono)}
   box-shadow:0 22px 70px rgba(29,29,31,.10);
   backdrop-filter:blur(24px) saturate(1.18);
   padding:26px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto;
   gap:28px;
   overflow:hidden;
 }
@@ -865,6 +864,17 @@ td input.num{text-align:right;font-family:var(--mono)}
 }
 .vendor-install:hover{
   background:#fff;
+}
+.vendor-cover__message{
+  position:relative;
+  z-index:1;
+  align-self:center;
+}
+.vendor-cover__bottom{
+  position:relative;
+  z-index:1;
+  display:flex;
+  align-items:flex-end;
 }
 .vendor-cover h1{
   position:relative;
@@ -1325,9 +1335,19 @@ td input.num{text-align:right;font-family:var(--mono)}
   .vendor-cover h1{font-size:25px}
   .vendor-portal{display:block}
   .vendor-cover{
-    min-height:auto;
+    min-height:calc(100vh - 24px);
     border-radius:22px;
     margin:12px;
+    grid-template-rows:auto minmax(260px,1fr) auto;
+  }
+  .vendor-cover__message{
+    align-self:center;
+  }
+  .vendor-cover__bottom{
+    align-items:flex-end;
+  }
+  .vendor-install{
+    margin-bottom:18px;
   }
   .vendor-cover .db-pill{display:none}
   .vendor-panel{
